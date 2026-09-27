@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Autonomous Vertical Urban Aeroponic Farming & Nutrient Injection System</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="app.css">
+</head>
+<body>
+    <div class="app-layout">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="brand">
+                <div class="brand-icon">🌱</div>
+                <div class="brand-text">
+                    <h2>AERO•SYS 66</h2>
+                    <span>Vertical Urban Agritech</span>
+                </div>
+            </div>
+
+            <nav class="nav-menu">
+                <button class="nav-item active" data-tab="dashboard">
+                    <span class="nav-icon">📊</span>
+                    <span class="nav-label">Overview & Telemetry</span>
+                </button>
+                <button class="nav-item" data-tab="towers">
+                    <span class="nav-icon">🌿</span>
+                    <span class="nav-label">Aeroponic Towers</span>
+                </button>
+                <button class="nav-item" data-tab="mist-cycles">
+                    <span class="nav-icon">💧</span>
+                    <span class="nav-label">Nutrient Mist Cycles</span>
+                </button>
+                <button class="nav-item" data-tab="harvests">
+                    <span class="nav-icon">🌾</span>
+                    <span class="nav-label">Harvest & Yield</span>
+                </button>
+                <div class="nav-divider">COMMERCE & ERP</div>
+                <button class="nav-item" data-tab="procurement">
+                    <span class="nav-icon">📦</span>
+                    <span class="nav-label">Purchase Orders & Bills</span>
+                </button>
+                <button class="nav-item" data-tab="sales">
+                    <span class="nav-icon">🛒</span>
+                    <span class="nav-label">Sales & Grocery Invoices</span>
+                </button>
+                <button class="nav-item" data-tab="journals">
+                    <span class="nav-icon">⚖️</span>
+                    <span class="nav-label">Double-Entry Journals</span>
+                </button>
+                <button class="nav-item" data-tab="reports">
+                    <span class="nav-icon">📈</span>
+                    <span class="nav-label">P&L and Balance Sheet</span>
+                </button>
+                <button class="nav-item" data-tab="budgets">
+                    <span class="nav-icon">🎯</span>
+                    <span class="nav-label">Zone Budgets</span>
+                </button>
+                <button class="nav-item" data-tab="master-data">
+                    <span class="nav-icon">🏢</span>
+                    <span class="nav-label">Master Data & CoA</span>
+                </button>
+                <button class="nav-item" data-tab="api-tester">
+                    <span class="nav-icon">⚡</span>
+                    <span class="nav-label">REST API Tester</span>
+                </button>
+            </nav>
+
+            <div class="system-health">
+                <div class="health-header">
+                    <span class="pulse-dot"></span>
+                    <span class="health-status">System Autonomous</span>
+                </div>
+                <div class="health-meta">
+                    <small>MySQL 8.0 • Spring Boot 3.2</small>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Top App Bar -->
+            <header class="topbar">
+                <div class="topbar-title">
+                    <h1 id="page-title">Overview & Telemetry</h1>
+                    <p id="page-desc">Real-time root-zone humidity, automated mist nutrient cycles & farm telemetry</p>
+                </div>
+                <div class="topbar-actions">
+                    <button class="btn btn-secondary" id="btn-refresh" onclick="refreshCurrentTab()">
+                        🔄 Refresh Data
+                    </button>
+                    <button class="btn btn-primary" onclick="openSimulateModal()">
+                        📡 Ingest Telemetry
+                    </button>
+                </div>
+            </header>
+
+            <!-- KPI Banner -->
+            <section class="kpi-grid">
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <span class="kpi-label">Active Crop Towers</span>
+                        <span class="kpi-badge success">Online</span>
+                    </div>
+                    <div class="kpi-value" id="kpi-towers">--</div>
+                    <div class="kpi-sub">Controlled Root Zones</div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <span class="kpi-label">Mist Injections Logged</span>
+                        <span class="kpi-badge info">Auto-Trigger</span>
+                    </div>
+                    <div class="kpi-value" id="kpi-mists">--</div>
+                    <div class="kpi-sub">PPM & Humidity Regulated</div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <span class="kpi-label">Harvested Produce</span>
+                        <span class="kpi-badge accent">Organic</span>
+                    </div>
+                    <div class="kpi-value" id="kpi-harvests">-- kg</div>
+                    <div class="kpi-sub">Lettuce, Basil & Greens</div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <span class="kpi-label">Net Operating Profit</span>
+                        <span class="kpi-badge highlight">P&L Ledger</span>
+                    </div>
+                    <div class="kpi-value text-success" id="kpi-profit">--</div>
+                    <div class="kpi-sub">Revenues minus Supplies & Power</div>
+                </div>
+            </section>
+
+            <!-- Dynamic Tab Content Views -->
+            <div class="content-body">
+
+                <!-- 1. DASHBOARD OVERVIEW -->
+                <div class="tab-pane active" id="pane-dashboard">
+                    <div class="dashboard-grid">
+                        <div class="card full-width">
+                            <div class="card-header">
+                                <h3>🌱 Real-Time Tower Environmental Status</h3>
+                                <span class="tag">Live Ingestion Active</span>
+                            </div>
+                            <div class="card-body">
+                                <div class="tower-cards-grid" id="dashboard-tower-cards">
+                                    <!-- Dynamic Tower cards with live humidity and PPM -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card half-width">
+                            <div class="card-header">
+                                <h3>💧 Recent Mist Injections</h3>
+                                <span class="tag">Auto-Feedback</span>
+                            </div>
+                            <div class="card-body scrollable">
+                                <table class="data-table" id="table-recent-mists">
+                                    <thead>
+                                        <tr>
+                                            <th>Tower</th>
+                                            <th>Trigger</th>
+                                            <th>Duration</th>
+                                            <th>Nutrient (ml)</th>
+                                            <th>Timestamp</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="card half-width">
+                            <div class="card-header">
+                                <h3>⚖️ Ledger Recent Double-Entry Activity</h3>
+                                <span class="tag">Balancing Books</span>
+                            </div>
+                            <div class="card-body scrollable">
+                                <table class="data-table" id="table-recent-journals">
+                                    <thead>
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>Journal</th>
+                                            <th>Reference</th>
+                                            <th>Description</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. TOWERS TAB -->
+                <div class="tab-pane" id="pane-towers">
+                    <div class="card">
+                        <div class="card-header">
+                            <div>
+                                <h3>Aeroponic Towers Fleet</h3>
+                                <p>Manage modular vertical aeroponic production towers</p>
+                            </div>
+                            <button class="btn btn-primary btn-sm" onclick="openAddTowerModal()">+ Add New Tower</button>
+                        </div>
+                        <div class="card-body">
+                            <table class="data-table" id="table-towers">
+                                <thead>
+                                    <tr>
+                                        <th>Tower Code</th>
+                                        <th>Location Zone</th>
+                                        <th>Crop Planted</th>
+                                        <th>Status</th>
+                                        <th>Latest Humidity</th>
+                                        <th>Nutrient PPM</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. MIST CYCLES TAB -->
+                <div class="tab-pane" id="pane-mist-cycles">
+                    <div class="card">
+                        <div class="card-header">
+                            <div>
+                                <h3>Nutrient Misting Cycles Log</h3>
+                                <p>Autonomous root-zone mist injection logs with nozzle activation timestamps</p>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <table class="data-table" id="table-all-mists">
+                                <thead>
+                                    <tr>
+                                        <th>Cycle ID</th>
+                                        <th>Tower Code</th>
+                                        <th>Trigger Source</th>
+                                        <th>Duration (sec)</th>
+                                        <th>Mineral Sol. (ml)</th>
+                                        <th>Executed At</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4. HARVESTS TAB -->
+                <div class="tab-pane" id="pane-harvests">
+                    <div class="card">
+                        <div class="card-header">
+                            <div>
+                                <h3>Crop Yield Inventory</h3>
+                                <p>Recorded harvests ready for supermarket chain distribution</p>
+                            </div>
+                            <button class="btn btn-primary btn-sm" onclick="openHarvestModal()">+ Record New Harvest</button>
+                        </div>
+                        <div class="card-body">
+                            <table class="data-table" id="table-harvests">
+                                <thead>
+                                    <tr>
+                                        <th>Yield ID</th>
+                                        <th>Tower Code</th>
+                                        <th>Product / Crop</th>
+                                        <th>Harvest Date</th>
+                                        <th>Weight (kg)</th>
+                                        <th>Est. Valuation</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 5. PROCUREMENT (POs & BILLS) -->
+                <div class="tab-pane" id="pane-procurement">
+                    <div class="grid-2col">
+                        <div class="card">
+                            <div class="card-header">
+                                <div>
+                                    <h3>Purchase Orders</h3>
+                                    <p>Liquid minerals & equipment ordered from vendors</p>
+                                </div>
+                                <button class="btn btn-primary btn-sm" onclick="openCreatePoModal()">+ Create PO</button>
+                            </div>
+                            <div class="card-body">
+                                <table class="data-table" id="table-pos">
+                                    <thead>
+                                        <tr>
+                                            <th>PO #</th>
+                                            <th>Vendor</th>
+                                            <th>Date</th>
+                                            <th>Amount</th>
+                                            <th>Status</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <div>
+                                    <h3>Vendor Bills</h3>
+                                    <p>Accounts Payable bills converted from POs</p>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <table class="data-table" id="table-bills">
+                                    <thead>
+                                        <tr>
+                                            <th>Bill #</th>
+                                            <th>Vendor</th>
+                                            <th>Date</th>
+                                            <th>Amount</th>
+                                            <th>Status</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 6. SALES & GROCERY INVOICES -->
+                <div class="tab-pane" id="pane-sales">
+                    <div class="grid-2col">
+                        <div class="card">
+                            <div class="card-header">
+                                <div>
+                                    <h3>Sales Orders</h3>
+                                    <p>Harvest delivery commitments for supermarket clients</p>
+                                </div>
+                                <button class="btn btn-primary btn-sm" onclick="openCreateSoModal()">+ Create SO</button>
+                            </div>
+                            <div class="card-body">
+                                <table class="data-table" id="table-sos">
+                                    <thead>
+                                        <tr>
+                                            <th>SO #</th>
+                                            <th>Customer</th>
+                                            <th>Date</th>
+                                            <th>Amount</th>
+                                            <th>Status</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <div>
+                                    <h3>Customer Invoices</h3>
+                                    <p>Accounts Receivable billed to grocery chains</p>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <table class="data-table" id="table-invoices">
+                                    <thead>
+                                        <tr>
+                                            <th>Invoice #</th>
+                                            <th>Customer</th>
+                                            <th>Date</th>
+                                            <th>Amount</th>
+                                            <th>Status</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 7. DOUBLE-ENTRY JOURNALS -->
+                <div class="tab-pane" id="pane-journals">
+                    <div class="card">
+                        <div class="card-header">
+                            <div>
+                                <h3>Double-Entry General Ledger</h3>
+                                <p>Strict balancing entries ensuring Sum(Debits) == Sum(Credits)</p>
+                            </div>
+                            <span class="badge badge-success">Balanced Double-Entry Verified</span>
+                        </div>
+                        <div class="card-body">
+                            <table class="data-table" id="table-all-journals">
+                                <thead>
+                                    <tr>
+                                        <th>Entry ID</th>
+                                        <th>Date</th>
+                                        <th>Journal Type</th>
+                                        <th>Reference</th>
+                                        <th>Description</th>
+                                        <th>Account Lines (Debit / Credit)</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 8. FINANCIAL & FACILITY REPORTS -->
+                <div class="tab-pane" id="pane-reports">
+                    <div class="grid-2col">
+                        <!-- Profit & Loss -->
+                        <div class="card">
+                            <div class="card-header">
+                                <div>
+                                    <h3>Profit & Loss Statement (P&L)</h3>
+                                    <p>Produce Revenues vs Mineral Nutrients & Electricity Costs</p>
+                                </div>
+                                <span class="tag">Live GAAP/IFRS</span>
+                            </div>
+                            <div class="card-body" id="pl-container">
+                                <!-- Dynamic P&L breakdown -->
+                            </div>
+                        </div>
+
+                        <!-- Balance Sheet -->
+                        <div class="card">
+                            <div class="card-header">
+                                <div>
+                                    <h3>Balance Sheet</h3>
+                                    <p>Tower Infrastructure & Cash vs Open Liabilities & Retained Equity</p>
+                                </div>
+                                <span class="tag">Balanced</span>
+                            </div>
+                            <div class="card-body" id="bs-container">
+                                <!-- Dynamic Balance Sheet breakdown -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 9. ZONE BUDGETS -->
+                <div class="tab-pane" id="pane-budgets">
+                    <div class="card">
+                        <div class="card-header">
+                            <div>
+                                <h3>Vertical Farm Zone Budget Performance</h3>
+                                <p>Allocates operational funds against actual power/nutrient costs and crop revenues</p>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <table class="data-table" id="table-budgets">
+                                <thead>
+                                    <tr>
+                                        <th>Analytic Code</th>
+                                        <th>Zone Name</th>
+                                        <th>Assigned Tower</th>
+                                        <th>Budgeted Amount</th>
+                                        <th>Actual Expenditure</th>
+                                        <th>Variance</th>
+                                        <th>Utilization</th>
+                                        <th>Performance</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 10. MASTER DATA & COA -->
+                <div class="tab-pane" id="pane-master-data">
+                    <div class="grid-3col">
+                        <!-- Contacts -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>Contacts (Customers & Vendors)</h4>
+                            </div>
+                            <div class="card-body scrollable">
+                                <table class="data-table" id="table-contacts">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Type</th>
+                                            <th>Email</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Products -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>Product Master</h4>
+                            </div>
+                            <div class="card-body scrollable">
+                                <table class="data-table" id="table-products">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>UOM</th>
+                                            <th>Unit Price</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Chart of Accounts -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>Chart of Accounts Master</h4>
+                            </div>
+                            <div class="card-body scrollable">
+                                <table class="data-table" id="table-coa">
+                                    <thead>
+                                        <tr>
+                                            <th>Code</th>
+                                            <th>Account Name</th>
+                                            <th>Type</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 11. REST API TESTER -->
+                <div class="tab-pane" id="pane-api-tester">
+                    <div class="card">
+                        <div class="card-header">
+                            <div>
+                                <h3>Interactive REST API Test Console</h3>
+                                <p>Directly test the exact use-case endpoints specified in the requirements</p>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="api-endpoints-list">
+                                <div class="api-item">
+                                    <div class="api-meta">
+                                        <span class="badge badge-post">POST</span>
+                                        <code>/api/aeroponics/towers</code>
+                                        <span class="api-desc">Create aeroponic tower</span>
+                                    </div>
+                                    <button class="btn btn-sm btn-secondary" onclick="testCreateTowerApi()">Test Endpoint</button>
+                                </div>
+
+                                <div class="api-item">
+                                    <div class="api-meta">
+                                        <span class="badge badge-post">POST</span>
+                                        <code>/api/aeroponics/telemetry</code>
+                                        <span class="api-desc">Ingest root humidity & PPM; auto-triggers misting</span>
+                                    </div>
+                                    <button class="btn btn-sm btn-secondary" onclick="testTelemetryApi()">Test Endpoint</button>
+                                </div>
+
+                                <div class="api-item">
+                                    <div class="api-meta">
+                                        <span class="badge badge-get">GET</span>
+                                        <code>/api/reports/profit-loss</code>
+                                        <span class="api-desc">Generate Aeroponic Farm P&L Report</span>
+                                    </div>
+                                    <button class="btn btn-sm btn-secondary" onclick="testPlReportApi()">Test Endpoint</button>
+                                </div>
+
+                                <div class="api-item">
+                                    <div class="api-meta">
+                                        <span class="badge badge-get">GET</span>
+                                        <code>/api/reports/balance-sheet</code>
+                                        <span class="api-desc">Generate Farm Balance Sheet Report</span>
+                                    </div>
+                                    <button class="btn btn-sm btn-secondary" onclick="testBalanceSheetApi()">Test Endpoint</button>
+                                </div>
+
+                                <div class="api-item">
+                                    <div class="api-meta">
+                                        <span class="badge badge-get">GET</span>
+                                        <code>/api/reports/budget</code>
+                                        <span class="api-desc">Generate Facility Budget Report</span>
+                                    </div>
+                                    <button class="btn btn-sm btn-secondary" onclick="testBudgetReportApi()">Test Endpoint</button>
+                                </div>
+                            </div>
+
+                            <div class="api-console-output">
+                                <div class="console-header">
+                                    <span>JSON Response Console</span>
+                                    <button class="btn btn-sm btn-link" onclick="clearApiOutput()">Clear</button>
+                                </div>
+                                <pre id="api-output">// Click any "Test Endpoint" button above to execute live REST request...</pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- MODAL: Telemetry Simulator -->
+    <div class="modal-backdrop" id="modal-telemetry">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>📡 Ingest Root Telemetry & Test Auto-Mist</h3>
+                <button class="modal-close" onclick="closeModal('modal-telemetry')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="form-telemetry" onsubmit="submitTelemetry(event)">
+                    <div class="form-group">
+                        <label>Select Aeroponic Tower</label>
+                        <select id="telemetry-tower-select" class="form-control" required></select>
+                    </div>
+                    <div class="form-group">
+                        <label>Root Zone Humidity (%)</label>
+                        <input type="number" step="0.1" min="10" max="100" id="telemetry-humidity" class="form-control" value="62.5" required>
+                        <small class="form-hint">Threshold: < 70% automatically triggers ultrasonic misting nozzles.</small>
+                    </div>
+                    <div class="form-group">
+                        <label>Nutrient Solution (PPM)</label>
+                        <input type="number" step="1" min="100" max="2500" id="telemetry-ppm" class="form-control" value="760" required>
+                        <small class="form-hint">Threshold: < 800 PPM triggers nutrient injection.</small>
+                    </div>
+                    <div class="modal-actions">
+                        <button type="button" class="btn btn-secondary" onclick="closeModal('modal-telemetry')">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Transmit Telemetry (POST)</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: Add Tower -->
+    <div class="modal-backdrop" id="modal-tower">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>🌿 Add New Aeroponic Tower</h3>
+                <button class="modal-close" onclick="closeModal('modal-tower')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="form-tower" onsubmit="submitNewTower(event)">
+                    <div class="form-group">
+                        <label>Tower Code</label>
+                        <input type="text" id="tower-code" class="form-control" placeholder="e.g. TWR-E01" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Facility Location</label>
+                        <input type="text" id="tower-location" class="form-control" placeholder="e.g. Module 4 - West Zone" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Crop Type</label>
+                        <input type="text" id="tower-crop" class="form-control" placeholder="e.g. Butterhead Lettuce" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Operational Status</label>
+                        <select id="tower-status" class="form-control">
+                            <option value="ACTIVE">ACTIVE</option>
+                            <option value="IDLE">IDLE</option>
+                            <option value="MAINTENANCE">MAINTENANCE</option>
+                        </select>
+                    </div>
+                    <div class="modal-actions">
+                        <button type="button" class="btn btn-secondary" onclick="closeModal('modal-tower')">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Create Tower</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: Record Harvest -->
+    <div class="modal-backdrop" id="modal-harvest">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>🌾 Record Harvest Yield</h3>
+                <button class="modal-close" onclick="closeModal('modal-harvest')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="form-harvest" onsubmit="submitHarvest(event)">
+                    <div class="form-group">
+                        <label>Aeroponic Tower</label>
+                        <select id="harvest-tower-select" class="form-control" required></select>
+                    </div>
+                    <div class="form-group">
+                        <label>Harvested Crop Product</label>
+                        <select id="harvest-product-select" class="form-control" required></select>
+                    </div>
+                    <div class="form-group">
+                        <label>Quantity Harvested (kg)</label>
+                        <input type="number" step="0.1" min="0.5" id="harvest-qty" class="form-control" value="25.0" required>
+                    </div>
+                    <div class="modal-actions">
+                        <button type="button" class="btn btn-secondary" onclick="closeModal('modal-harvest')">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save Harvest Yield</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: Create PO -->
+    <div class="modal-backdrop" id="modal-po">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>📦 Create Purchase Order (Nutrient Minerals)</h3>
+                <button class="modal-close" onclick="closeModal('modal-po')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="form-po" onsubmit="submitPo(event)">
+                    <div class="form-group">
+                        <label>Mineral Chemical Vendor</label>
+                        <select id="po-vendor-select" class="form-control" required></select>
+                    </div>
+                    <div class="form-group">
+                        <label>Product Item</label>
+                        <select id="po-product-select" class="form-control" required></select>
+                    </div>
+                    <div class="form-group">
+                        <label>Order Quantity</label>
+                        <input type="number" step="1" min="1" id="po-qty" class="form-control" value="10" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Notes / PO Description</label>
+                        <input type="text" id="po-notes" class="form-control" value="Standard nutrient replenishment order">
+                    </div>
+                    <div class="modal-actions">
+                        <button type="button" class="btn btn-secondary" onclick="closeModal('modal-po')">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Issue PO</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: Create SO -->
+    <div class="modal-backdrop" id="modal-so">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>🛒 Create Sales Order (Grocery Client)</h3>
+                <button class="modal-close" onclick="closeModal('modal-so')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="form-so" onsubmit="submitSo(event)">
+                    <div class="form-group">
+                        <label>Retail Supermarket Client</label>
+                        <select id="so-customer-select" class="form-control" required></select>
+                    </div>
+                    <div class="form-group">
+                        <label>Produce Crop Item</label>
+                        <select id="so-product-select" class="form-control" required></select>
+                    </div>
+                    <div class="form-group">
+                        <label>Supply Weight (kg)</label>
+                        <input type="number" step="0.5" min="1" id="so-qty" class="form-control" value="15" required>
+                    </div>
+                    <div class="modal-actions">
+                        <button type="button" class="btn btn-secondary" onclick="closeModal('modal-so')">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Create Sales Order</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <script src="app.js"></script>
+</body>
+</html>
